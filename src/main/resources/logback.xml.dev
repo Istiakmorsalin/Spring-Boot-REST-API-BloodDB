@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration  scan="true" scanPeriod="120 seconds" >
+  
+  <contextName>SocialSports</contextName>
+  
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+	  
+	   <encoder>
+	    <pattern>%date{ISO8601} %-5level [%thread] [%file:%line %M] - %msg %n</pattern>
+	   </encoder>
+	
+	</appender>
+	
+	<appender name="Last_30_Days" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	
+		<File>logs/ss.log</File>
+	
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<FileNamePattern>ss.%d{yyyy-MM-dd}.log</FileNamePattern>
+
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>30</maxHistory>
+	
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%date{ISO8601} %-5level [%thread] [%file:%line %M] - %msg %n</pattern>
+		</encoder>
+	
+	</appender>
+	
+	<appender name="LOGTOFILE" class="ch.qos.logback.core.FileAppender">
+	 
+	      <file>logs/ss.log</file>
+	 
+	      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+	         <pattern>%date{ISO8601} %-5level [%thread] [%file:%line %M] - %msg %n</pattern>
+	      </encoder>
+	
+	</appender>
+	
+	<logger name="org.mongodb" level="WARN"/>
+	
+	<root level="INFO">
+	    <appender-ref ref="STDOUT"/>
+	</root>
+</configuration>

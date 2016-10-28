@@ -1,0 +1,10 @@
+target/
+.idea/
+.settings/
+.classpath
+.project
+tgit rev-listgit rev-listgit rev-list
+src/main/resources/ss.properties.temp
+*.jpg
+*.png
+src/main/resources/bd.properties
