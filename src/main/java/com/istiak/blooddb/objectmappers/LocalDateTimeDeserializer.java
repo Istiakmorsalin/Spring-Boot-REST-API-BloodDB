@@ -1,8 +1,4 @@
-/**
- * Imtiaz Mirza imz.mrz@gmail.com
- * For BDreview Inc
- * 
- */
+
 package com.istiak.blooddb.objectmappers;
 
 import com.fasterxml.jackson.core.JsonParser;
