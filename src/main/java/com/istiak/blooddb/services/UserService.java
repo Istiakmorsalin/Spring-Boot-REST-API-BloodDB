@@ -340,6 +340,26 @@ public class UserService {
 		}
 	}
 
+    public List<User> getByLocationAndBloodGroup(String district,String division,String bloodGroup )
+            throws Exception {
+        if(district!=null||division!=null||bloodGroup!=null) {
+            List<User> users = new ArrayList<User>();
+			Query query = new Query(
+					Criteria.where("bloodGroup").is(bloodGroup)
+							.orOperator(
+									Criteria.where("userDivision").is(division),
+									Criteria.where("bloodGroup").is(bloodGroup)
+							)
+			);
+
+			users = SpringDataDBUtils.getMongoOperations().find(query, User.class);
+            return users;
+        }else
+        {
+            return null;
+        }
+    }
+
 
 	public Boolean logout(String uId) throws Exception { 
 		

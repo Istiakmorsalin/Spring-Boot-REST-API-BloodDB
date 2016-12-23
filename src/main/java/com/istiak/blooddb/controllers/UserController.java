@@ -646,26 +646,26 @@ public class UserController {
 	@GET
 	@Path("/search")
 	@Produces("application/json")
-	public Response searchbyNameOrEmail(
-			@QueryParam("firstname") String firstName,
-			@QueryParam("lastname") String lastName,
-			@QueryParam("email") String email) {
-		logger.debug(">> searchbyNameOrEmail({},{},{},{})", firstName, lastName, email);
+	public Response searchByBloodGroup(
+			@QueryParam("userDistrict") String userDistrict,
+			@QueryParam("userDivision") String userDivision,
+			@QueryParam("bloodGroup") String bloodGroup) {
+		logger.debug(">> searchByBloodGroup({},{},{},{})", userDistrict, userDivision, bloodGroup);
 
 		Map<Object, Object> apiResponse = new HashMap<Object, Object>();
 		Map<Object, Object> response = new HashMap<Object, Object>();
 
 		try {
 			logger.info("Searching users.");
-			logger.debug(">> userService.getByNameOrEmailOrPhone({},{},{},{})", firstName, lastName, email);
-			List<User> c = userService.getByNameOrEmail(firstName, lastName, email);
+			logger.debug(">> userService.getByNameOrEmailOrPhone({},{},{},{})", userDistrict, userDivision, bloodGroup);
+			List<User> c = userService.getByLocationAndBloodGroup(userDistrict, userDivision, bloodGroup);
 
 			if (c != null) {
 				logger.info("Found users." + c);
 			}
 
 
-			logger.debug("<< userService.getByNameOrEmailOrPhone({},{},{},{}) < returning: {}", firstName, lastName, email);
+			logger.debug("<< userService.getByNameOrEmailOrPhone({},{},{},{}) < returning: {}", userDistrict, userDivision, bloodGroup);
 
 			response.put("response", c);
 			apiResponse.put("apiresponse", response);

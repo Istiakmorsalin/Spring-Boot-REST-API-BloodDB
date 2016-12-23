@@ -91,6 +91,12 @@ public class User  {
 
 	private String profileImage;
 
+	private String bloodGroup;
+
+	private String previousBloodDonationDate;
+	private String userDistrict;
+	private String userDivision;
+
     public boolean isSessionActive() {
 		if(this.getSessionExpireTime() == null ){
             return false;
@@ -291,6 +297,35 @@ public class User  {
 		}
 	}
 
+	public String getBloodGroup() {
+		return bloodGroup;
+	}
 
+	public void setBloodGroup(String bloodGroup) {
+		this.bloodGroup = bloodGroup;
+	}
 
+	public String getPreviousBloodDonatedDate() {
+		return previousBloodDonationDate;
+	}
+
+	public void setPreviousBloodDonatedDate(String previousBloodDonatedDate) {
+		this.previousBloodDonationDate = previousBloodDonatedDate;
+	}
+
+	public String getUserDistrict() {
+		return userDistrict;
+	}
+
+	public void setUserDistrict(String userDistrict) {
+		this.userDistrict = userDistrict;
+	}
+
+	public String getUserDivision() {
+		return userDivision;
+	}
+
+	public void setUserDivision(String userDivision) {
+		this.userDivision = userDivision;
+	}
 }
