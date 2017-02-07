@@ -27,7 +27,7 @@ public class AppConfig extends AbstractMongoConfiguration {
   @Override
   public Mongo mongo() throws Exception {
 		
-	    MongoClientURI uri = new MongoClientURI(getDatabaseURI()+getDatabaseName());
+	    MongoClientURI uri = new MongoClientURI(getDatabaseURI());
 	    MongoClient client = new MongoClient(uri);
         return client;
   }
@@ -35,7 +35,7 @@ public class AppConfig extends AbstractMongoConfiguration {
   @Override
   protected  String getDatabaseName() {
 	 
-		 try {
+      try {
 			 InputStream inputStream = getClass().getClassLoader().getResourceAsStream(AppConstant.PROPERTIES_FILE);
 		  	 properties.load(inputStream);
 
@@ -53,27 +53,19 @@ public class AppConfig extends AbstractMongoConfiguration {
   
   protected  String getDatabaseURI() {
 	  
-	    
-	  //logger.info("#############  DB Password after dycryption ##################"+secret);
-	  
-	  
-		 try {
+      //logger.info("#############  DB Password after dycryption ##################"+secret);
+      try {
 			 InputStream inputStream = getClass().getClassLoader().getResourceAsStream(AppConstant.PROPERTIES_FILE);
 		  	 properties.load(inputStream);
 
 		} catch (IOException e) {
 			logger.error("Error:"+e.getMessage());
 		}
-	
-		 String dbURI = "mongodb://"+  properties.getProperty(AppConstant.PROPERTIES_DB_USER) + 
-				        ":" + properties.getProperty(AppConstant.PROPERTIES_DB_PASSWORD)     +
-				         "@" + properties.getProperty(AppConstant.PROPERTIES_DB_IP)      +
-				         ":" + properties.getProperty(AppConstant.PROPERTIES_DB_PORT)      + "/";
+
+      String dbURI = properties.getProperty(AppConstant.PROPERTIES_DB_IP);
 	  
         logger.info(dbURI);
         
- 
-		 
-		 return dbURI;
+      return dbURI;
   }
 } 
