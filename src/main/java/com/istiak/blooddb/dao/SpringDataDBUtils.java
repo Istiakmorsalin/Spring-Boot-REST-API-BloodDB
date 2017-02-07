@@ -28,7 +28,7 @@ public class SpringDataDBUtils {
 		
 			logger.info("Connecting to db ... ");
 			
-			MongoClientURI uri = new MongoClientURI(getDatabaseURI()+getDatabaseName());
+			MongoClientURI uri = new MongoClientURI(getDatabaseURI());
 		    MongoClient client = new MongoClient(uri);
 		    
 		    mongoOperation = new MongoTemplate(client, getDatabaseName());
@@ -69,10 +69,8 @@ public class SpringDataDBUtils {
 			logger.error("Error:"+e.getMessage());
 		}
 		
-		 String dbURI = "mongodb://"+  properties.getProperty(AppConstant.PROPERTIES_DB_USER) + 
-				        ":" + properties.getProperty(AppConstant.PROPERTIES_DB_PASSWORD)   +
-				         "@" + properties.getProperty(AppConstant.PROPERTIES_DB_IP)      +
-				         ":" + properties.getProperty(AppConstant.PROPERTIES_DB_PORT)      + "/";
+		 String dbURI = properties.getProperty(AppConstant.PROPERTIES_DB_IP);
+
 	  
         logger.info(dbURI);
 		 

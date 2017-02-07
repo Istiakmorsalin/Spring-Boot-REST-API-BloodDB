@@ -170,6 +170,7 @@ public class UserController {
 				serviceResponse.put("success",Boolean.FALSE);
 				serviceResponse.put("message","User not found");
 				apiResponse.put("response", serviceResponse);
+                return  Response.status(404).entity(apiResponse).build();
 
 			}
 
@@ -253,7 +254,6 @@ public class UserController {
        // logger.info("Start Updating user  :" + objToJson);
 
 		try {
-
             User findUser = userService.get(user.getId());
             if (findUser == null) {
                 logger.info("user_not_found");
@@ -270,17 +270,6 @@ public class UserController {
 
 			
 			if (validateErrors.isEmpty()) {
-
-               /* User findUser = userService.get(user.getId());
-                if (findUser == null) {
-                    logger.info("user_not_found");
-                    apiResponse.put("user_not_found","user.primary.email.not.found");
-                    return Response.status(404).entity(apiResponse).build();
-                }
-                user.setPassword(findUser.getPassword());
-                user.setPasswordsalt(findUser.getPasswordsalt());
-                user.setActive(findUser.getActive());
-*/
 				logger.info("Calling userservice to update user with=" + user.getEmail());
 				user = (User) userService.update(user);
 
