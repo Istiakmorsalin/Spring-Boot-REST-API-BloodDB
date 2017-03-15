@@ -93,16 +93,9 @@ public class UserController {
 				if(user !=null){
 
 					logger.debug("User done creating user with email :" + user.getEmail());
-//					serviceResponse.put("token", user.getSessionToken());
-//					serviceResponse.put("userId", user.getId());
-//					
-					serviceResponse.put("created", user);
-					apiResponse.put("apiresponse", serviceResponse);
+                    apiResponse.put("apiresponse", user);
 
-					// Uncomment to send welcome email
-					//				EmailUtil.sendEmail(user.getEmail(),
-					//						MessageUtil.WELCOME_EMAIL_SUBJECT,
-					//						MessageUtil.getWelcomeEmailBody(user.getFirstname()));
+
 					return Response.ok(apiResponse).build();
 				}
 
