@@ -1,10 +1,7 @@
 package com.istiak.blooddb.controllers;
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -19,10 +16,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.istiak.blooddb.services.LoginAuditService;
 import com.istiak.blooddb.services.UserService;
+import com.istiak.blooddb.utils.DistanceUtil;
 import com.istiak.blooddb.vo.UserLoginVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,16 +93,9 @@ public class UserController {
 				if(user !=null){
 
 					logger.debug("User done creating user with email :" + user.getEmail());
-//					serviceResponse.put("token", user.getSessionToken());
-//					serviceResponse.put("userId", user.getId());
-//					
-					serviceResponse.put("created", user);
-					apiResponse.put("apiresponse", serviceResponse);
+                    apiResponse.put("apiresponse", user);
 
-					// Uncomment to send welcome email
-					//				EmailUtil.sendEmail(user.getEmail(),
-					//						MessageUtil.WELCOME_EMAIL_SUBJECT,
-					//						MessageUtil.getWelcomeEmailBody(user.getFirstname()));
+
 					return Response.ok(apiResponse).build();
 				}
 
@@ -118,8 +110,8 @@ public class UserController {
 		catch (DuplicateKeyException e){
 			
 			logger.error("Error occured creating user:",e);
-			apiResponse.put("error", "Duplicate user found for emaill address:"+user.getEmail());
-		}
+            apiResponse.put("error", "Duplicate user found for Phone Number " + user.getPhoneNumber());
+        }
 		
 		catch (Exception e) {
 
@@ -375,9 +367,8 @@ public class UserController {
 	 * @summary Get user list
 	 */
 	@GET
-
-	@Produces("application/json")
-	public Response list() {
+    @Produces("application/json")
+    public Response list() {
 
 		Map<Object, Object> apiResponse     = new HashMap<Object, Object>();
 		Map<Object, Object> serviceResponse = new HashMap<Object, Object>();
@@ -636,28 +627,34 @@ public class UserController {
 	@Path("/search")
 	@Produces("application/json")
 	public Response searchByBloodGroup(
-			@QueryParam("userDistrict") String userDistrict,
-			@QueryParam("userDivision") String userDivision,
-			@QueryParam("bloodGroup") String bloodGroup) {
-		logger.debug(">> searchByBloodGroup({},{},{},{})", userDistrict, userDivision, bloodGroup);
+            @QueryParam("userLatitude") String userLatitude,
+            @QueryParam("userLongitude") String userLongitude,
+            @QueryParam("bloodGroup") String bloodGroup) {
+        logger.debug(">> searchByBloodGroup({},{},{},{})", userLatitude, userLongitude, bloodGroup);
 
 		Map<Object, Object> apiResponse = new HashMap<Object, Object>();
 		Map<Object, Object> response = new HashMap<Object, Object>();
 
 		try {
 			logger.info("Searching users.");
-			logger.debug(">> userService.getByNameOrEmailOrPhone({},{},{},{})", userDistrict, userDivision, bloodGroup);
-			List<User> c = userService.getByLocationAndBloodGroup(userDistrict, userDivision, bloodGroup);
+            logger.debug(">> userService.searchByBloodGroup({},{},{},{})", userLatitude, userLongitude, bloodGroup);
+            List<User> users = userService.getByLocationAndBloodGroup(bloodGroup);
 
-			if (c != null) {
-				logger.info("Found users." + c);
-			}
+            if (users != null) {
+                for (User user : users) {
+                    DistanceUtil distanceUtil = new DistanceUtil();
+                    String distance = distanceUtil.distance(Double.parseDouble(userLatitude), Double.parseDouble(userLongitude), Double.parseDouble(user.getUserLatitude()), Double.parseDouble(user.getUserLongitude()));
+                    user.setDistanceFromCurrentUser(distance);
+                }
+            }
 
+            Collections.sort(users);
 
-			logger.debug("<< userService.getByNameOrEmailOrPhone({},{},{},{}) < returning: {}", userDistrict, userDivision, bloodGroup);
+            logger.debug("<< userService.getbylocation({},{},{},{}) < returning: {}", userLatitude, userLongitude, bloodGroup);
 
-			response.put("response", c);
-			apiResponse.put("apiresponse", response);
+            response.put("response", users);
+            response.put("total", users.size());
+            apiResponse.put("apiresponse", response);
             return Response.ok(apiResponse).build();
 		} catch (Exception e) {
             apiResponse.put("error", e.getMessage());

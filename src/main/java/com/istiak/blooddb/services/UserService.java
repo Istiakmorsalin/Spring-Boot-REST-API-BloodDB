@@ -124,12 +124,12 @@ public class UserService {
 	    user.setActive("1");
 		user.setPasswordsalt(salt);
 //		user.setPassword(this.getSecurePassword(user.getPassword(), salt));
-        System.out.println(user.getPassword());
-        user.setPassword(this.encrypt(user.getPassword()));
-		//user.setSessionToken(token);
-		user.setSessionExpireTime( LocalDateTime.now().plusDays(1) );
+        System.out.println(user.getPhoneNumber());
+        user.setPassword(this.encrypt(user.getPhoneNumber()));
+        user.setSessionToken(token);
+        user.setSessionExpireTime( LocalDateTime.now().plusDays(1) );
 		user.setJoiningDate(LocalDateTime.now());
-		user.setBirthDate(LocalDateTime.of(1900, 1, 1, 0, 0));
+
 
 		SpringDataDBUtils.getMongoOperations().insert(user);
 		
@@ -140,9 +140,6 @@ public class UserService {
 
 		Query query = new Query();
 		query.addCriteria(Criteria.where("id").is(userId));
-
-		//query.fields().exclude("password");
-		//query.fields().exclude("passwordsalt");
 
 		return SpringDataDBUtils.getMongoOperations().findOne(query, User.class);
 	}
@@ -176,12 +173,6 @@ public class UserService {
 		query.addCriteria(Criteria.where("id").is(new ObjectId(user.getId())));
 		User updatedUserInfo = SpringDataDBUtils.getMongoOperations().findOne(query, User.class);
 		return updatedUserInfo;
-
-		//user.setPassword(this.encrypt(this.decrypt(user.getPassword())));
-		//user.setDateModified(LocalDateTime.now());
-		//SpringDataDBUtils.getMongoOperations().save(user);
-		
-		//return user;
 	}
 
 	public User updateProPic(User user) throws Exception {
@@ -340,19 +331,15 @@ public class UserService {
 		}
 	}
 
-    public List<User> getByLocationAndBloodGroup(String district,String division,String bloodGroup )
-            throws Exception {
-        if(district!=null||division!=null||bloodGroup!=null) {
+    public List<User> getByLocationAndBloodGroup(String bloodGroup) throws Exception {
+        if (bloodGroup != null) {
             List<User> users = new ArrayList<User>();
 			Query query = new Query(
-					Criteria.where("bloodGroup").is(bloodGroup)
-							.orOperator(
-									Criteria.where("userDivision").is(division),
-									Criteria.where("bloodGroup").is(bloodGroup)
-							)
-			);
+                    Criteria.where("bloodGroup").is(bloodGroup));
 
 			users = SpringDataDBUtils.getMongoOperations().find(query, User.class);
+
+
             return users;
         }else
         {

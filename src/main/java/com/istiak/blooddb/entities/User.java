@@ -21,80 +21,76 @@ import com.istiak.blooddb.objectmappers.LocalDateTimeDeserializer;
 
 
 @Document
-public class User  {
+public class User implements Comparable<User> {
 
 	@Id
 	private String id;
 
 	@Size(min = 2, max =50)
-	@Pattern(regexp = "[A-Za-z. ]*", message = "First name requires valid character")
-	private String firstname;
-	
-	@Size(min = 2, max = 50)
-	@Pattern(regexp = "[A-Za-z. ]*", message = "Last name requires contain valid character")
-	private String lastname;
-	
+    @Pattern(regexp = "[A-Za-z. ]*", message = "Name requires valid character")
+    @NotNull(message = "Name requires valid value")
+    @NotEmpty(message = "Name requires non empty value")
+    private String name;
+
     @Indexed( unique=true, sparse=true )
-	@NotNull(message =  "Email requires valid value")
-    @NotEmpty(message = "Email requires non empty value")
     @Email(message =    "Email requires valid format")
 	private String email;
-	
 
-	@JsonIgnore
-	@Size(min = 8, max = 48, message = "Password requires minimum 8 characters")
-	private String password;
+    @Indexed(unique = true, sparse = true)
+    @Size(min = 11, max = 11)
+    @Pattern(regexp = "[0-9.\\-+ ]*", message = "Phone requires valid alphanumaric characters")
+    @NotNull(message = "PhoneNumber requires valid value")
+    @NotEmpty(message = "PhoneNumber requires non empty value")
+    private String phoneNumber;
+
+    @NotNull(message = "BloodGroup requires valid value")
+    @NotEmpty(message = "BloodGroup requires non empty value")
+    private String bloodGroup;
+
+    @JsonIgnore
+    private String password;
 
     @JsonIgnore
     private String passwordsalt = "";
 
+    private String userLatitude;
+    private String userLongitude;
 
+    private String distanceFromCurrentUser;
 
-	@JsonIgnore
-	@SafeHtml
+    @JsonIgnore
+    @SafeHtml
 	private String userHash = "";
 
-	
-	@Pattern(regexp = "[A-Za-z0-9. ]*", message = "Type requires valid alphanumaric characters")
-	private String type;
-	private String sessionToken;
-	
-	@SafeHtml
-	private String about;
-	
-	@Pattern(regexp = "[0-9.\\-+ ]*", message = "Phone requires valid alphanumaric characters")
-	private String phone;
-	@Pattern(regexp = "[0-9.\\-+ ]*", message = "Cell requires valid alphanumaric characters")
-	private String cell ;
+    private String sessionToken;
+
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonIgnore
+    private LocalDateTime sessionExpireTime;
 	
 	@JsonDeserialize(using =  LocalDateTimeDeserializer.class)
-	private LocalDateTime birthDate;
+    @JsonIgnore
+    private LocalDateTime loginDate;
+	
+	@JsonDeserialize(using =  LocalDateTimeDeserializer.class)
+    @JsonIgnore
+    private LocalDateTime lastLoginTime;
 
 	@JsonDeserialize(using =  LocalDateTimeDeserializer.class)
-	private LocalDateTime sessionExpireTime;
-	
-	@JsonDeserialize(using =  LocalDateTimeDeserializer.class)
-	private LocalDateTime loginDate;
-	
-	@JsonDeserialize(using =  LocalDateTimeDeserializer.class)
-	private LocalDateTime lastLoginTime;
+    @JsonIgnore
+    private LocalDateTime joiningDate;
 
 	@JsonDeserialize(using =  LocalDateTimeDeserializer.class)
-	private LocalDateTime joiningDate;
-
-	@JsonDeserialize(using =  LocalDateTimeDeserializer.class)
-	private LocalDateTime dateModified;
+    @JsonIgnore
+    private LocalDateTime dateModified;
 
 
     @JsonIgnore
     private String active = "0";
 
 	private String profileImage;
-
-	private String bloodGroup;
-
-	private String previousBloodDonationDate;
-	private String userDistrict;
+    private String previousBloodDonationDate;
+    private String userDistrict;
 	private String userDivision;
 
     public boolean isSessionActive() {
@@ -116,9 +112,32 @@ public class User  {
 		}
 	}
 
+    public String getUserLatitude() {
+        return userLatitude;
+    }
 
-	public String getUserHash() {
-		return userHash;
+    public void setUserLatitude(String userLatitude) {
+        this.userLatitude = userLatitude;
+    }
+
+    public String getUserLongitude() {
+        return userLongitude;
+    }
+
+    public void setUserLongitude(String userLongitude) {
+        this.userLongitude = userLongitude;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getUserHash() {
+        return userHash;
 	}
 
 	public void setUserHash(String userHash) {
@@ -129,35 +148,13 @@ public class User  {
 		return id;
 	}
 
-	public String getType() {
-		return type;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getName() {
-		return (firstname + ' ' + lastname).trim();
-	}
-
-	public String getFirstname() {
-		return firstname;
-	}
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-	public String getLastname() {
-		
-		return lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
-
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @JsonIgnore
     public String getPassword() {
@@ -179,28 +176,16 @@ public class User  {
 		this.passwordsalt = passwordsalt;
 	}
 
-
-
-	public String getEmail() {
-		return email;
+    public String getEmail() {
+        return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email.toLowerCase();
 	}
 
-	
-	public String getAbout() {
-		return about;
-	}
-
-	public void setAbout(String about) {
-		this.about = about;
-	}
-
-
-	public String getActive() {
-		return active;
+    public String getActive() {
+        return active;
 	}
 
 	public void setActive(String active) {
@@ -215,34 +200,6 @@ public class User  {
 		this.sessionToken = sessionToken;
 	}
 
-	public String getPhone() {
-		return phone;
-	}
-
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-
-	public String getCell() {
-		return cell;
-	}
-
-
-	public void setCell(String cell) {
-		this.cell = cell;
-	}
-
-
-	public LocalDateTime getBirthDate() {
-		return birthDate;
-	}
-
-
-	public void setBirthDate(LocalDateTime birthDate) {
-		this.birthDate = birthDate;
-	}
 
 	public String getProfileImage() {
 		return profileImage;
@@ -264,8 +221,16 @@ public class User  {
 		}
 	}
 
-	public LocalDateTime getLastLoginTime() {
-		return lastLoginTime;
+    public String getDistanceFromCurrentUser() {
+        return distanceFromCurrentUser;
+    }
+
+    public void setDistanceFromCurrentUser(String distanceFromCurrentUser) {
+        this.distanceFromCurrentUser = distanceFromCurrentUser;
+    }
+
+    public LocalDateTime getLastLoginTime() {
+        return lastLoginTime;
 	}
 
 	public void setLastLoginTime(LocalDateTime lastLoginTime)
@@ -328,4 +293,10 @@ public class User  {
 	public void setUserDivision(String userDivision) {
 		this.userDivision = userDivision;
 	}
+
+    @Override
+    public int compareTo(User o) {
+        return new String(this.distanceFromCurrentUser).compareTo(new String(o.distanceFromCurrentUser));
+    }
+
 }
