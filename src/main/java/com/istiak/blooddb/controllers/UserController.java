@@ -74,29 +74,27 @@ public class UserController {
         JsonParser parser = new JsonParser();
         JsonObject userJO = parser.parse(objToJson).getAsJsonObject();
         userJO.remove("password");
-        //logger.info("Start Creating user with name :" + userJO);
 
 		try {
 			Set<ConstraintViolation<User>> validateErrors = validator.validate(user);
-			//logger.info("creating new user email=" + user.getEmail());
+			//logger.info("creating new user email=" + user.getPhoneNumber());
 
 
 			if (validateErrors.isEmpty()) {
 				
-				logger.debug("Calling user service: "+ user.getEmail());
+				logger.debug("Calling user service: "+ user.getPhoneNumber());
 
 				user.setPassword(user.getPassword());
 				user = (User) userService.create(user);
 				
-				logger.debug("Done calling userservice");
+				logger.debug("Done calling UserService");
 				
 				if(user !=null){
 
-					logger.debug("User done creating user with email :" + user.getEmail());
-                    apiResponse.put("apiresponse", user);
+					logger.debug("User done creating user with PhoneNumber :" + user.getPhoneNumber());
 
+					return Response.ok(user).build();
 
-					return Response.ok(apiResponse).build();
 				}
 
 			} else {
@@ -110,7 +108,8 @@ public class UserController {
 		catch (DuplicateKeyException e){
 			
 			logger.error("Error occured creating user:",e);
-            apiResponse.put("error", "Duplicate user found for Phone Number " + user.getPhoneNumber());
+            apiResponse.put("message", "Duplicate user found for Phone Number " + user.getPhoneNumber());
+			return Response.status(400).entity(apiResponse).build();
         }
 		
 		catch (Exception e) {
