@@ -143,25 +143,22 @@ public class UserController {
 
 			logger.info("Retreiving  user with id=" + uId);
 			
-			User u = userService.get(uId);
+			User user = userService.get(uId);
 			
 			logger.info("User service called with this id=" + uId);
 			
-			if (u != null) {
+			if (user != null) {
 
 				logger.info("User retrieved with =" + uId);
-				serviceResponse.put("retreived", u);
-				apiResponse.put("apiresponse", serviceResponse);
 
-				return Response.ok(apiResponse).build();
+				return Response.ok(user).build();
 
 			} else {
 				
 				logger.info("User not retrived =" + uId);
 				serviceResponse.put("success",Boolean.FALSE);
 				serviceResponse.put("message","User not found");
-				apiResponse.put("response", serviceResponse);
-                return  Response.status(404).entity(apiResponse).build();
+                return  Response.status(404).entity(serviceResponse).build();
 
 			}
 
