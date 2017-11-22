@@ -77,7 +77,7 @@ public class UserController {
 
 		try {
 			Set<ConstraintViolation<User>> validateErrors = validator.validate(user);
-			//logger.info("creating new user email=" + user.getPhoneNumber());
+			logger.info("creating new user email=" + user.getPhoneNumber());
 
 
 			if (validateErrors.isEmpty()) {

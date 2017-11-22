@@ -37,7 +37,7 @@ public class User implements Comparable<User> {
 	private String email;
 
     @Indexed(unique = true, sparse = true)
-    @Size(min = 11, max = 11)
+	@Size(min = 11, max = 11)
     @Pattern(regexp = "[0-9.\\-+ ]*", message = "Phone requires valid alphanumaric characters")
     @NotNull(message = "PhoneNumber requires valid value")
     @NotEmpty(message = "PhoneNumber requires non empty value")

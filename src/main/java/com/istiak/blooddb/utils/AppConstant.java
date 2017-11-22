@@ -17,4 +17,5 @@ public class AppConstant {
     public static final String PROPERTIES_DB_IP = "db.ip";
     public static final String PROPERTIES_DB_PORT = "db.port";
     public final static String BASE_PACKAGE_NAME = "com.istiak.blooddb";
+    public final static String BLOG_PIC_DIR = "/Users/slbd/IdeaProjects/Spring-Boot-REST-API-BloodDB";
 }

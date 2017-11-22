@@ -24,6 +24,7 @@ public class JerseyConfig extends ResourceConfig {
 
 
         register(UserController.class);
+        register(UserPostController.class);
 
 
 
